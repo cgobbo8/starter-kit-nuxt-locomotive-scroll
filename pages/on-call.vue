@@ -66,6 +66,7 @@
           <div
             class="example-small-square"
             data-scroll
+            data-scroll-call="callLog"
             data-scroll-speed="2.5"
           />
         </div>
@@ -83,14 +84,31 @@ import gsap from 'gsap'
 export default {
   mounted() {
     const locomotive = this.$refs.scroller.locomotive
+    locomotive.on('scroll', (instance) => {
+      const progress = (100 * instance.scroll.y) / instance.limit.y
+      console.log(progress)
+    })
+
     locomotive.on('call', (value, way, obj) => {
       switch (value) {
         case 'fadeText': {
+          console.log(way)
           const child = obj.el.firstChild
           gsap.to(child, {
             duration: 2,
             ease: 'expo.out',
             opacity: 0.25,
+          })
+          break
+        }
+        case 'callLog': {
+          console.log(way)
+          gsap.to(obj.el, {
+            duration: 2,
+            ease: 'expo.out',
+            scaleY: 0,
+            opacity: 0.25,
+            delay: 1,
           })
           break
         }
